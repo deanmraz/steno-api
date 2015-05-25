@@ -10,9 +10,10 @@ trait DocumentLoaderTrait
       $files = scandir($path);
       foreach($files as $file)
       {
-        if($file !== '.' && $file !== '..') $this->addFile(realpath($path.$file));
+        if($file !== '.' && $file !== '..') $this->addFile(realpath("$path/$file"));
       }
     }
+    else throw new \Exception("Directory doesn't exist $path");
   }
 
   public function addFile($file_path)
@@ -22,5 +23,6 @@ trait DocumentLoaderTrait
       $document->load($file_path);
       $this->documents[] = $document;
     }
+    else throw new \Exception("File doesn't exist $file_path");
   }
 }
