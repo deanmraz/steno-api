@@ -10,6 +10,8 @@ class MockServer
   use DocumentLoaderTrait;
   use DocumentConfigTrait;
 
+  protected $allowed_methods =  ['GET','POST','PUT','DELETE'];
+
   protected function getBaseUrl()
   {
     return "/".Config::get('steno-api::mock_server.uri');
@@ -28,17 +30,25 @@ class MockServer
 
   public function createApi($document)
   {
-    foreach($document->getOperations() as $operation)
+    $operations = $document->getOperations();
+    if(!empty($operations))
     {
-      $uri = $operation['uri'];
-      $method = $operation['method'];
+      foreach($operations as $operation)
+      {
+        $uri = $operation['uri'];
+        $method = $operation['method'];
+        $allowed = $this->allowed_methods;
 
-      Route::$method($this->getBaseUrl().$uri, function() use ($operation) {
-        $example = $operation['examples'][0]['Response'];
-        $response =  Response::make($example['Body'],$example['StatusCode']);
-        if(isset($example['ContentType'])) $response->header('Content-Type', $example['ContentType']);
-        return $response;
-      });
+        if(!empty($method) && array_search($method, $allowed)!==false)
+        {
+          Route::$method($this->getBaseUrl().$uri, function() use ($operation) {
+            $example = $operation['examples'][0]['Response'];
+            $response =  Response::make($example['Body'],$example['StatusCode']);
+            if(isset($example['ContentType'])) $response->header('Content-Type', $example['ContentType']);
+            return $response;
+          });
+        }
+      }
     }
   }
 }

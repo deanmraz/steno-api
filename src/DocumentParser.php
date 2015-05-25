@@ -109,7 +109,8 @@ class DocumentParser
     $last_key = null;
     foreach($matched as $match)
     {
-      if($this->lineIsSubParent($match['parent']))
+
+      if(isset($match['parent']) && $this->lineIsSubParent($match['parent']))
       {
         $sub_match[$last_key]['children'][] = $match;
       }
@@ -127,11 +128,14 @@ class DocumentParser
   {
     foreach($document as $section)
     {
-      $line = $section['parent'];
-      if($this->isVersion($line)) $this->setVersion($section);
-      else if($this->isApi($line)) $this->setApi($section);
-      else if($this->isResource($line)) $this->setResource($section);
-      else if($this->isOperation($line)) $this->setOperation($section);
+      $line = isset($section['parent']) ? $section['parent'] : null;
+      if($line)
+      {
+        if($this->isVersion($line)) $this->setVersion($section);
+        else if($this->isApi($line)) $this->setApi($section);
+        else if($this->isResource($line)) $this->setResource($section);
+        else if($this->isOperation($line)) $this->setOperation($section);
+      }
     }
   }
 
