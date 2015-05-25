@@ -1,4 +1,4 @@
-<?php namespace DMraz\StenoApi\StenoParser;
+<?php namespace DMraz\StenoApi\StenoParsers;
 
 class Version_0_0_0
 {

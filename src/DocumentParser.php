@@ -3,7 +3,7 @@
 class DocumentParser
 {
   protected $version;
-  protected $base_parser_class = 'DMraz\\StenoApi\\StenoParser\\';
+  protected $base_parser_class = 'DMraz\\StenoApi\\StenoParsers\\';
   protected $parser;
 
   public function load($path)
