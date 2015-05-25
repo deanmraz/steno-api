@@ -359,4 +359,36 @@ class DocumentParser
     return $example;
   }
 
+  /**
+   * @return mixed
+   */
+  public function getOperations()
+  {
+    return $this->operations;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getResource()
+  {
+    return $this->resource;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getApi()
+  {
+    return $this->api;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getVersion()
+  {
+    return $this->version;
+  }
+
 }
