@@ -1,0 +1,16 @@
+{
+  "name": "dmraz/steno-api",
+  "description": "Framework to write concise api documentation",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dean Mraz"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "DMraz\\StenoApi\\": "src/"
+    }
+  },
+  "minimum-stability": "dev"
+}
