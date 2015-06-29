@@ -4,16 +4,15 @@ namespace DMraz\StenoApi\Parsers;
 class Line
 {
   public $original;
-
-  public $parent; //can be parent?
-  public $list_item;
   public $type;
+
+  protected $parent; //can be parent?
+  protected $list_item;
 
   public $parent_types = ['###','##','#'];
   public $list_item_types = ['+'];
 
   public $leads;  // the lead characters
-
   public $key;
   public $value;
   public $text;
