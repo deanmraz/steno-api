@@ -7,6 +7,7 @@ class Document
 {
   protected $lines;
   protected $sections;
+  protected $nested;
 
   public function parse($document)
   {
@@ -17,6 +18,9 @@ class Document
 
     # section the lines
     $this->sections = $sections = $this->segmentSections($lines);
+
+    # nested sections
+    $this->nested = $nested = $this->nestSections($sections);
   }
 
   protected function cleanup($document)
@@ -39,11 +43,6 @@ class Document
       $collection->push(new Line($line, $key));
     }
     return $collection;
-  }
-
-  protected function isAssociativeArray($array)
-  {
-    return array_keys($array) !== range(0, count($array) - 1);
   }
 
   protected function segmentSections(Collection $lineCollection)
@@ -136,6 +135,37 @@ class Document
   protected function segmentNoneLine($line, $section)
   {
 
+  }
+
+  protected function findNextParent($depth,Collection $sections, $after)
+  {
+    $next = $sections->slice($after);
+
+    return $next->first(function($key, $item) use($depth) {
+      return $item->depth === $depth;
+    });
+  }
+
+  protected function nestSections(Collection $sections)
+  {
+    $nested = new Collection;
+    $reverse = $sections->reverse();
+    foreach($reverse->all() as $key => $section)
+    {
+      // if 3 depth merge to next one
+      if($section->depth === 3) {
+        $parent = $this->findNextParent(2,$reverse,$key);
+        $parent->prependChild($section);
+      // if 2 depth merge to next one
+      } else if($section->depth === 2) {
+        $parent = $this->findNextParent(1,$reverse,$key);
+        $parent->prependChild($section);
+        // if 1 depth push to colleciton
+      } else {
+        $nested->push($section);
+      }
+    }
+    return $nested->reverse();
   }
 
 }

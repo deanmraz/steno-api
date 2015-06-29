@@ -75,4 +75,10 @@ class Section
     return $this->description ? : null;
   }
 
+  public function prependChild($child)
+  {
+    if(empty($this->children)) $this->children[] = $child;
+    else array_unshift($this->children, $child);
+  }
+
 }

@@ -5,10 +5,29 @@ use DMraz\StenoApi\Parsers\Document;
 class ParserDocumentTest extends \PHPUnit_Framework_TestCase
 {
   protected $parser;
+  protected $string;
 
   protected function setUp()
   {
     $this->parser = new Document;
+
+    $line0 = "# Header";
+    $line1 = "Description";
+    $line2 = "## Sub Header";
+    $line3 = "list:";
+    $line4 = "+ item value";
+    $line5 = "attribute: attribute_value";
+    $line6 = "lists:";
+    $line7 = "+ key: value";
+    $line8 = "### Key: value";
+    $line9 = "description";
+    $line10 = "attribute: value";
+    $line11 = "### Double 3 Depth";
+    $line12 = "## Double 2 Depth";
+    $line13 = "# Another 1st level parent";
+
+    $this->string = "$line0\n$line1\n$line2\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n$line13\n";
+
   }
 
   protected function callMethod($name, array $args) {
@@ -27,19 +46,7 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
 
   public function testLines()
   {
-    $line0 = "# Header";
-    $line1 = "Description";
-    $line2 = "## Sub Header";
-    $line3 = "list:";
-    $line4 = "+ item value";
-    $line5 = "key: value";
-    $line6 = "lists:";
-    $line7 = "+ key: value";
-    $line8 = "### Key: value";
-    $line9 = "description";
-    $line10 = "attribute: value";
-
-    $string = "$line0\n$line1\n$line2\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n";
+    $string = $this->string;
 
     $lines = $this->callMethod('segmentLines', [$string]);
 
@@ -56,22 +63,16 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('text', $lines->get(9)->type);
     $this->assertEquals('key_value', $lines->get(10)->type);
 
-    //tests lines
-    $this->assertEquals($line0,$lines->get(0)->original);
-    $this->assertEquals($line1,$lines->get(1)->original);
-    $this->assertEquals($line2,$lines->get(2)->original);
-    $this->assertEquals($line3,$lines->get(3)->original);
-
     //test key
     $this->assertEquals('list', $lines->get(3)->key);
     $this->assertEquals('lists', $lines->get(6)->key);
-    $this->assertEquals('key', $lines->get(5)->key);
+    $this->assertEquals('attribute', $lines->get(5)->key);
     $this->assertEquals('key', $lines->get(7)->key);
     $this->assertEquals('Key', $lines->get(8)->key);
     $this->assertEquals('attribute', $lines->get(10)->key);
 
     //test value
-    $this->assertEquals('value', $lines->get(5)->value);
+    $this->assertEquals('attribute_value', $lines->get(5)->value);
     $this->assertEquals('value', $lines->get(7)->value);
     $this->assertEquals('value', $lines->get(8)->value);
     $this->assertEquals('value', $lines->get(10)->value);
@@ -91,19 +92,7 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
 
   public function testSections()
   {
-    $line0 = "# Header";
-    $line1 = "Description";
-    $line2 = "## Sub Header";
-    $line3 = "list:";
-    $line4 = "+ item value";
-    $line5 = "attribute: attribute_value";
-    $line6 = "lists:";
-    $line7 = "+ key: value";
-    $line8 = "### Key: value";
-    $line9 = "description";
-    $line10 = "attribute: value";
-
-    $string = "$line0\n$line1\n$line2\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n";
+    $string = $this->string;
 
     $lines = $this->callMethod('segmentLines', [$string]);
 
@@ -127,5 +116,27 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('value', $sections->get(2)->value);
     $this->assertEquals('description', $sections->get(2)->getDescription());
     $this->assertEquals('value', $sections->get(2)->get('attribute'));
+  }
+
+  public function testNested()
+  {
+    $string = $this->string;
+
+    $lines = $this->callMethod('segmentLines', [$string]);
+
+    $sections = $this->callMethod('segmentSections', [$lines]);
+
+    $nested = $this->callMethod('nestSections', [$sections]);
+
+    //test nested
+    $this->assertEquals('Header', $nested->get(0)->title);
+    $this->assertEquals('Another 1st level parent', $nested->get(1)->title);
+
+    $this->assertEquals('Sub Header', $nested->get(0)->children[0]->title);
+    $this->assertEquals('Double 2 Depth', $nested->get(0)->children[1]->title);
+
+    $this->assertEquals('Key', $nested->get(0)->children[0]->children[0]->key);
+    $this->assertEquals('Double 3 Depth', $nested->get(0)->children[0]->children[1]->title);
+
   }
 }
