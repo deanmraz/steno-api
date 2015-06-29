@@ -10,9 +10,9 @@ class Section
   public $key;
   public $value;
   public $title;
-  public $description;
   public $children = [];
 
+  protected $description;
   protected $attributes;
   protected $attribute_types = [];
 
@@ -63,6 +63,16 @@ class Section
   public function get($key)
   {
     return array_get($this->attributes, $key);
+  }
+
+  public function setDescription($text)
+  {
+    $this->description = $text;
+  }
+
+  public function getDescription()
+  {
+    return $this->description ? : null;
   }
 
 }
