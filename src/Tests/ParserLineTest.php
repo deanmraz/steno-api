@@ -55,4 +55,22 @@ class ParserLineTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('key', $line->key);
     $this->assertEquals('value', $line->value);
   }
+
+  public function testNoneString()
+  {
+    $string = "";
+    $line = $this->createLine($string, 'none');
+    $this->assertNull($line->key);
+    $this->assertNull($line->value);
+    $this->assertNull($line->text);
+  }
+
+  public function testNoneReturn()
+  {
+    $string = "\n\r";
+    $line = $this->createLine($string, 'none');
+    $this->assertNull($line->key);
+    $this->assertNull($line->value);
+    $this->assertNull($line->text);
+  }
 }

@@ -76,12 +76,13 @@ class Line
 
   protected function parseText()
   {
+    $original = trim($this->original);
     // only if it does not have key can it be plain text
     if(!$this->key) {
       if($leads = $this->leads) {
-        $this->text = trim(str_replace($leads,'',$this->original));
-      } else {
-        $this->text = $this->original;
+        $this->text = trim(str_replace($leads,'',$original));
+      } else if(!empty($original)){
+        $this->text = $original;
       }
     } else {
       $this->text = false;
@@ -95,7 +96,7 @@ class Line
     else if($this->list_item && !$this->key && !$this->value) $this->type = 'list_item';
     else if($this->key && !$this->value) $this->type = 'list';
     else if($this->key && $this->value) $this->type = 'key_value';
-    else $this->type = 'text';
-
+    else if($this->text) $this->type = 'text';
+    else $this->type = 'none';
   }
 }
