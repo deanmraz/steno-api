@@ -3,13 +3,11 @@ namespace DMraz\StenoApi\Parsers;
 
 class Line
 {
-  public $number;
-  public $after;
-
   public $original;
 
   public $parent; //can be parent?
   public $list_item;
+  public $type;
 
   public $parent_types = ['###','##','#'];
   public $list_item_types = ['+'];
@@ -20,16 +18,15 @@ class Line
   public $value;
   public $text;
 
-  public function __construct($line, $number)
+  public function __construct($line)
   {
     $this->original = $line;
-    $this->number = $number;
-    $this->after = $number === 0 ? null : $number - 1;
     $this->parseParent();
     $this->parseListItem();
     $this->parseKey();
     $this->parseValue();
     $this->parseText();
+    $this->parseType();
   }
 
   protected function parseParent()
@@ -90,5 +87,16 @@ class Line
     } else {
       $this->text = false;
     }
+  }
+
+  protected function parseType()
+  {
+    if($this->parent) $this->type = 'parent';
+    else if($this->list_item && $this->key && $this->value) $this->type = 'list_key_value';
+    else if($this->list_item && !$this->key && !$this->value) $this->type = 'list_item';
+    else if($this->key && !$this->value) $this->type = 'list';
+    else if($this->key && $this->value) $this->type = 'key_value';
+    else $this->type = 'text';
+
   }
 }
