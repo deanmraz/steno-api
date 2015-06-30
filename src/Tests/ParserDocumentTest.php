@@ -126,7 +126,6 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('{"json":true}', $sections->last()->get('key'));
     $this->assertEquals('Description', $sections->last()->getDescription());
 
-    dd($sections);
   }
 
   public function testNested()
