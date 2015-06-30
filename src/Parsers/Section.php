@@ -60,6 +60,15 @@ class Section
     $this->setAttributeType($attribute, 'list_key_value');
   }
 
+  public function continueAttributeKeyValueString($key, $value)
+  {
+    if(empty($this->attributes[$key])) {
+      $this->attributes[$key] = "";
+    }
+    $this->attributes[$key] .= $value;
+    $this->setAttributeType($key, 'list_key_value');
+  }
+
   public function get($key)
   {
     return array_get($this->attributes, $key);

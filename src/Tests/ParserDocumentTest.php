@@ -25,8 +25,13 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
     $line11 = "### Double 3 Depth";
     $line12 = "## Double 2 Depth";
     $line13 = "# Another 1st level parent";
+    $line14 = "Description";
+    $line15 = "+ key: ";
+    $line16 = "{";
+    $line17 = '"json":true';
+    $line18 = "}";
 
-    $this->string = "$line0\n$line1\n$line2\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n$line13\n";
+    $this->string = "$line0\n$line1\n$line2\n$line3\n$line4\n$line5\n$line6\n$line7\n$line8\n$line9\n$line10\n$line11\n$line12\n$line13\n$line14\n$line15\n$line16\n$line17\n$line18\n";
 
   }
 
@@ -116,6 +121,12 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('value', $sections->get(2)->value);
     $this->assertEquals('description', $sections->get(2)->getDescription());
     $this->assertEquals('value', $sections->get(2)->get('attribute'));
+
+    //ensure text gets compiled properly
+    $this->assertEquals('{"json":true}', $sections->last()->get('key'));
+    $this->assertEquals('Description', $sections->last()->getDescription());
+
+    dd($sections);
   }
 
   public function testNested()

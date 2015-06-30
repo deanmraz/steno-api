@@ -21,6 +21,8 @@ class Document
 
     # nested sections
     $this->nested = $nested = $this->nestSections($sections);
+
+    return $nested;
   }
 
   protected function cleanup($document)
@@ -60,9 +62,12 @@ class Document
       if(is_object($result)) {
         $sections->push($result);
         $lastSection = $sections->last();
+        $lastListAttribute = null;
       // set last list attribute
       } else if(!empty($result)) {
         $lastListAttribute = $result;
+      } else {
+        $lastListAttribute = null;
       }
     }
     return $sections;
@@ -86,9 +91,16 @@ class Document
    * @param $line
    * @param $section Section
    */
-  protected function segmentTextLine($line, $section)
+  protected function segmentTextLine($line, $section, $lastListAttribute)
   {
-    $section->setDescription($line->text);
+    if($lastListAttribute) {
+      $section->continueAttributeKeyValueString($lastListAttribute, $line->text);
+      return $lastListAttribute;
+    }
+    else {
+      $section->setDescription($line->text);
+      return null;
+    }
   }
 
   /**
@@ -108,6 +120,7 @@ class Document
   protected function segmentListItemLine($line, $section, $attribute)
   {
     $section->addAttributeListItem($attribute, $line->text);
+    return $attribute;
   }
 
   /**
@@ -117,6 +130,7 @@ class Document
   protected function segmentListKeyValueLine($line, $section, $attribute)
   {
     $section->addAttributeListKeyValue($line->key, $line->value, $attribute);
+    return $attribute;
   }
 
   /**
