@@ -149,4 +149,36 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('Double 3 Depth', $nested->get(0)->children[0]->children[1]->title);
 
   }
+
+  public function testSerializers()
+  {
+    $line0 = "# API: restApi";
+    $line1 = "# Resource: rest";
+    $line12 = "+ id: unique";
+    $line13 = "+ name: string";
+    $line14 = "description: text";
+    $line2 = "# API: restApi";
+    $line3 = "# API: restApi";
+
+    $string = "$line0\n$line1\n$line12\n$line13\n$line14\n$line2\n$line3\n";
+
+    $lines = $this->callMethod('segmentLines', [$string]);
+
+    $sections = $this->callMethod('segmentSections', [$lines]);
+
+    $nested = $this->callMethod('nestSections', [$sections]);
+
+    $document = $this->callMethod('iterateSerializers', [$nested]);
+
+    // api serializer test
+    $this->assertEquals('restApi', $document['api']->getName());
+
+    // resource test
+    $this->assertEquals('rest', $document['resource']->getName());
+    $this->assertEquals('unique', $document['resource']->id);
+    $this->assertEquals('string', $document['resource']->name);
+    $this->assertEquals('text', $document['resource']->description);
+
+    // restful test 
+  }
 }
