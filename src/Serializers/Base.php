@@ -20,5 +20,11 @@ abstract class Base
     }
   }
 
+  public function getSerializerName()
+  {
+    $reflect = new \ReflectionClass(get_class($this));
+    return strtolower($reflect->getShortName());
+  }
+
   abstract protected function find($sections);
 }
