@@ -56,8 +56,12 @@ class Section
 
   public function addAttributeListKeyValue($key, $value, $attribute)
   {
-    $this->attributes[$attribute][$key] = $value;
-    $this->setAttributeType($attribute, 'list_key_value');
+    if(empty($attribute)) {
+      $this->addAttributeKeyValue($key, $value);
+    } else {
+      $this->attributes[$attribute][$key] = $value;
+      $this->setAttributeType($attribute, 'list_key_value');
+    }
   }
 
   public function continueAttributeKeyValueString($key, $value)
