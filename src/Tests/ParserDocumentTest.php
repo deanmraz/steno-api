@@ -171,16 +171,16 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
     $document = $this->callMethod('createDocument', [$nested, 'DMraz\StenoApi\Documents\DocumentRest']);
 
     // api serializer test
-    $this->assertEquals('restApi', $document['api']->getName());
+    $this->assertEquals('restApi', $document->api->getName());
 
     // resource test
-    $this->assertEquals('rest', $document['resource']->getName());
-    $this->assertEquals('unique', $document['resource']->id);
-    $this->assertEquals('string', $document['resource']->name);
-    $this->assertEquals('text', $document['resource']->description);
+    $this->assertEquals('rest', $document->resource->getName());
+    $this->assertEquals('unique', $document->resource->id);
+    $this->assertEquals('string', $document->resource->name);
+    $this->assertEquals('text', $document->resource->description);
 
     // restful test
-    $this->assertContains('/uri/get/path/to', $document['rest']->getVerbUris('get'));
-    $this->assertContains('/uri/post/path/to', $document['rest']->getVerbUris('post'));
+    $this->assertContains('/uri/get/path/to', $document->rest->getVerbUris('get'));
+    $this->assertContains('/uri/post/path/to', $document->rest->getVerbUris('post'));
   }
 }
