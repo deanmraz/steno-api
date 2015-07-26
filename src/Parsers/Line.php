@@ -16,6 +16,7 @@ class Line
   public $key;
   public $value;
   public $text;
+  public $json;
 
   public function __construct($line)
   {
@@ -25,7 +26,16 @@ class Line
     $this->parseKey();
     $this->parseValue();
     $this->parseText();
+    $this->parseJson();
+
     $this->parseType();
+  }
+
+  protected function parseJson()
+  {
+    if(strpos($this->original,'":') !== false || strpos($this->original,'" :') !== false || strpos($this->original,'",') !== false) {
+      $this->json = trim($this->original);
+    }
   }
 
   protected function parseParent()
@@ -92,6 +102,7 @@ class Line
   protected function parseType()
   {
     if($this->parent) $this->type = 'parent';
+    else if($this->json) $this->type = 'json';
     else if($this->list_item && $this->key && $this->value) $this->type = 'list_key_value';
     else if($this->list_item && !$this->key && !$this->value) $this->type = 'list_item';
     else if($this->key && !$this->value) $this->type = 'list';

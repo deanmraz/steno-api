@@ -97,6 +97,12 @@ class Document
     return $section;
   }
 
+  protected function segmentJsonLine($line, $section, $lastListAttribute)
+  {
+      $section->continueAttributeKeyValueString($lastListAttribute, $line->json);
+      return $lastListAttribute;
+  }
+
   /**
    * @param $line
    * @param $section Section
