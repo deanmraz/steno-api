@@ -51,4 +51,15 @@ class Rest extends Base
   {
     return array_keys($this->{strtolower($verb)});
   }
+
+  public function gets()
+  {
+    return $this->get;
+  }
+
+  public function getFirst()
+  {
+    $get = $this->get;
+    return reset($get);
+  }
 }
