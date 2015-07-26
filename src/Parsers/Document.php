@@ -31,7 +31,8 @@ class Document
   public function createDocument($sections, $type)
   {
     $document = new $type;
-    return $document->create($sections);
+    $document->create($sections);
+    return $document;
   }
 
   protected function cleanup($document)

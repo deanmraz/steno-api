@@ -3,17 +3,18 @@ namespace DMraz\StenoApi\Documents;
 
 abstract class Document
 {
+  protected $serializers = [];
+
   abstract public function getSerializers();
 
   public function create($sections)
   {
     $serializerNames = $this->getSerializers();
-    $serializers = [];
     foreach($serializerNames as $serializerName) {
       $serializer = new $serializerName($sections);
-      $serializers[$serializer->getSerializerName()] = $serializer;
+      $this->serializers[$serializer->getSerializerName()] = $serializer;
     }
-    return $serializers;
+    return $this->serializers;
   }
 
   public function getSerializer($key)
