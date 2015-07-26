@@ -157,8 +157,8 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
     $line12 = "+ id: unique";
     $line13 = "+ name: string";
     $line14 = "description: text";
-    $line2 = "# API: restApi";
-    $line3 = "# API: restApi";
+    $line2 = "# REST: GET /uri/get/path/to";
+    $line3 = "# REST: POST /uri/post/path/to";
 
     $string = "$line0\n$line1\n$line12\n$line13\n$line14\n$line2\n$line3\n";
 
@@ -179,6 +179,8 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('string', $document['resource']->name);
     $this->assertEquals('text', $document['resource']->description);
 
-    // restful test 
+    // restful test
+    $this->assertContains('/uri/get/path/to', $document['rest']->getVerbUris('get'));
+    $this->assertContains('/uri/post/path/to', $document['rest']->getVerbUris('post'));
   }
 }
