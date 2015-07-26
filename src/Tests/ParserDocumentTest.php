@@ -168,7 +168,7 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
 
     $nested = $this->callMethod('nestSections', [$sections]);
 
-    $document = $this->callMethod('iterateSerializers', [$nested]);
+    $document = $this->callMethod('createDocument', [$nested, 'DMraz\StenoApi\Documents\DocumentRest']);
 
     // api serializer test
     $this->assertEquals('restApi', $document['api']->getName());

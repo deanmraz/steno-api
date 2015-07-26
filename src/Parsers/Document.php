@@ -11,7 +11,7 @@ class Document
   protected $serializerNames;
   protected $serializers;
 
-  public function parse($document)
+  public function parse($document, $type = null)
   {
     $document = $this->cleanup($document);
 
@@ -24,38 +24,14 @@ class Document
     # nested sections
     $this->nested = $nested = $this->nestSections($sections);
 
-    # serializers
-    $this->serializers = $this->iterateSerializers($this->nested);
+    # create document object
+    return $this->createDocument($this->nested, $type);
   }
 
-  protected function setSerializers()
+  public function createDocument($sections, $type)
   {
-    return $this->serializerNames = [
-      'DMraz\StenoApi\Serializers\Api',
-      'DMraz\StenoApi\Serializers\Resource',
-      'DMraz\StenoApi\Serializers\Rest',
-    ];
-  }
-
-  protected function iterateSerializers($sections)
-  {
-    $serializerNames = $this->setSerializers();
-    $serializers = [];
-    foreach($serializerNames as $serializerName) {
-      $serializer = new $serializerName($sections);
-      $serializers[$serializer->getSerializerName()] = $serializer;
-    }
-    return $serializers;
-  }
-
-  public function getSerializer($key)
-  {
-    return isset($this->serializers[$key]) ? $this->serializers[$key] : null;
-  }
-
-  public function __get($key)
-  {
-    return $this->getSerializer($key);
+    $document = new $type;
+    return $document->create($sections);
   }
 
   protected function cleanup($document)
