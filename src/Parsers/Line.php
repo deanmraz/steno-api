@@ -52,7 +52,8 @@ class Line
 
   protected function parseListItem()
   {
-    $segment = explode(' ',$this->original);
+    $original = trim($this->original);
+    $segment = explode(' ', $original);
     if(array_search($segment[0],$this->list_item_types)!==false) {
       $this->leads = $segment[0];
       $this->list_item = true;

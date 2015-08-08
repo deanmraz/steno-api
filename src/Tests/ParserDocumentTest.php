@@ -49,6 +49,21 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
     $this->assertFalse(strpos($clean, "\r"));
   }
 
+  public function testListAndKeyValue()
+  {
+    $string = "# HTTP: GET /restfulResources\n\r".
+            "## Example: All\n\r".
+            "+ Response:\n\r".
+            "+ Content-Type: application/json\n\r";
+
+    $lines = $this->callMethod('segmentLines', [$string]);
+
+    $sections = $this->callMethod('segmentSections', [$lines]);
+
+    $this->assertEquals("application/json", $sections->get(0)->get('Response.Content-Type'));
+
+  }
+
   public function testLines()
   {
     $string = $this->string;
