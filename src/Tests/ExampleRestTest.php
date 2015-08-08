@@ -8,7 +8,7 @@ class ExampleRestTest extends PHPUnit_Framework_TestCase
   {
     $markdown = file_get_contents(__DIR__."/Examples/Restful.md");
     $parser = new Document;
-    $document = $parser->parse($markdown, "DMraz\\StenoApi\\Documents\\DocumentRest");
+    $document = $parser->parse($markdown, "DMraz\\StenoApi\\Documents\\DocumentHttp");
 
     //get api
     $this->assertEquals('Restful',$document->api->getName());
@@ -21,7 +21,7 @@ class ExampleRestTest extends PHPUnit_Framework_TestCase
     $this->assertEquals('text', $document->resource->content);
 
     //restful get apis
-    foreach($document->rest->getFirst()->children as $example)
+    foreach($document->http->getFirst()->children as $example)
     {
       $this->assertEquals('All', $example->value);
       $json = json_decode($example->get('Body'), true);

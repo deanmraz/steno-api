@@ -157,8 +157,8 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
     $line12 = "+ id: unique";
     $line13 = "+ name: string";
     $line14 = "description: text";
-    $line2 = "# REST: GET /uri/get/path/to";
-    $line3 = "# REST: POST /uri/post/path/to";
+    $line2 = "# HTTP: GET /uri/get/path/to";
+    $line3 = "# HTTP: POST /uri/post/path/to";
 
     $string = "$line0\n$line1\n$line12\n$line13\n$line14\n$line2\n$line3\n";
 
@@ -168,7 +168,7 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
 
     $nested = $this->callMethod('nestSections', [$sections]);
 
-    $document = $this->callMethod('createDocument', [$nested, 'DMraz\StenoApi\Documents\DocumentRest']);
+    $document = $this->callMethod('createDocument', [$nested, 'DMraz\StenoApi\Documents\DocumentHttp']);
 
     // api serializer test
     $this->assertEquals('restApi', $document->api->getName());
@@ -180,7 +180,7 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('text', $document->resource->description);
 
     // restful test
-    $this->assertContains('/uri/get/path/to', $document->rest->getVerbUris('get'));
-    $this->assertContains('/uri/post/path/to', $document->rest->getVerbUris('post'));
+    $this->assertContains('/uri/get/path/to', $document->http->getVerbUris('get'));
+    $this->assertContains('/uri/post/path/to', $document->http->getVerbUris('post'));
   }
 }

@@ -6,7 +6,7 @@
 + email: email
 + content: text
 
-# REST: GET /restfulResources
+# HTTP: GET /restfulResources
 ## Example: All
   + Response
     + Content-Type: application/json

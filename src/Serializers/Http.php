@@ -1,7 +1,7 @@
 <?php
 namespace DMraz\StenoApi\Serializers;
 
-class Rest extends Base
+class Http extends Base
 {
   protected $get = [];
   protected $post = [];
@@ -10,7 +10,7 @@ class Rest extends Base
 
   protected function find($section)
   {
-    if(strtoupper($section->key) === 'REST') {
+    if(strtoupper($section->key) === 'HTTP') {
       $this->segmentVerb($section);
     }
     return false;

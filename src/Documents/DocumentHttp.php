@@ -1,7 +1,7 @@
 <?php
 namespace DMraz\StenoApi\Documents;
 
-class DocumentRest extends Document
+class DocumentHttp extends Document
 {
   protected $serializers;
 
@@ -10,7 +10,7 @@ class DocumentRest extends Document
     return [
       'DMraz\StenoApi\Serializers\Api',
       'DMraz\StenoApi\Serializers\Resource',
-      'DMraz\StenoApi\Serializers\Rest',
+      'DMraz\StenoApi\Serializers\Http',
     ];
   }
 }

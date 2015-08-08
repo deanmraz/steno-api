@@ -2,7 +2,7 @@
 
 use DMraz\StenoApi\Serializers\Api;
 use DMraz\StenoApi\Serializers\Resource;
-use DMraz\StenoApi\Serializers\Rest;
+use DMraz\StenoApi\Serializers\Http;
 use DMraz\StenoApi\Parsers\Section;
 use Illuminate\Support\Collection;
 
@@ -24,19 +24,19 @@ class SerializersTest extends \PHPUnit_Framework_TestCase
     $resource_section->addAttributeKeyValue("key","value");
 
     $get = new Section;
-    $get->key = "REST";
+    $get->key = "HTTP";
     $get->value = "GET /path/to/get/uri";
 
     $post = new Section;
-    $post->key = "REST";
+    $post->key = "HTTP";
     $post->value = "POST /path/to/post/uri";
 
     $put = new Section;
-    $put->key = "REST";
+    $put->key = "HTTP";
     $put->value = "PUT /path/to/put/uri";
 
     $delete = new Section;
-    $delete->key = "REST";
+    $delete->key = "HTTP";
     $delete->value = "DELETE /path/to/delete/uri";
 
     return new Collection([$section, $api_section, $resource_section, $get, $post, $put, $delete]);
@@ -58,21 +58,21 @@ class SerializersTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals("value1", $resource->attribute1);
   }
 
-  public function testREST()
+  public function testHTTP()
   {
     $collection = $this->createSections();
-    $rest = new Rest($collection);
+    $http = new Http($collection);
 
-    $gets = $rest->getVerbUris('GET');
+    $gets = $http->getVerbUris('GET');
     $this->assertNotFalse(array_search('/path/to/get/uri', $gets));
 
-    $posts = $rest->getVerbUris('POST');
+    $posts = $http->getVerbUris('POST');
     $this->assertNotFalse(array_search('/path/to/post/uri', $posts));
 
-    $puts = $rest->getVerbUris('PUT');
+    $puts = $http->getVerbUris('PUT');
     $this->assertNotFalse(array_search('/path/to/put/uri', $puts));
 
-    $deletes = $rest->getVerbUris('DELETE');
+    $deletes = $http->getVerbUris('DELETE');
     $this->assertNotFalse(array_search('/path/to/delete/uri', $deletes));
   }
 }
