@@ -8,10 +8,11 @@
 
 # HTTP: GET /restfulResources
 ## Example: All
-  + Response
+  + Response:
     + Content-Type: application/json
     + Status Code: 200
     + Body:
+    ```
     {
       "restfulResources": [
         {
@@ -22,3 +23,4 @@
         }
       ]
     }
+    ```

@@ -67,12 +67,12 @@ class Document
     $codeBlockText = "";
     foreach($lines as $key => $line)
     {
-      if($line->type === 'code_block' && !$codeBlockStarted) {
+      if($line->type === 'code_block' && $codeBlockStarted === false) {
         $codeBlockStarted = "continue";
         continue;
-      } else if ($line->type === 'code_block' && $codeBlockStarted) {
+      } else if ($line->type === 'code_block' && $codeBlockStarted === 'continue') {
         $codeBlockStarted = "stop";
-        $lastSection->set($lastListAttribute, $codeBlockText);
+        $lastSection->setAttribute($lastListAttribute, $codeBlockText);
 
         if(strpos($lastListAttribute,".")!==false) {
           $lastAttrs = explode(".",$lastListAttribute);
@@ -86,7 +86,7 @@ class Document
         $method = "segment".studly_case($line->type)."Line";
         $result = $this->$method($line, $lastSection, $lastListAttribute);
       } else if($codeBlockStarted === 'continue') {
-        $codeBlockText .= $line->original;
+        $codeBlockText .= trim($line->original);
         $result = $lastListAttribute;
       }else if($codeBlockStarted === 'stop') {
         $codeBlockText = "";

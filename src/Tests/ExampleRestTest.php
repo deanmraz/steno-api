@@ -24,7 +24,9 @@ class ExampleRestTest extends PHPUnit_Framework_TestCase
     foreach($document->http->getFirst()->children as $example)
     {
       $this->assertEquals('All', $example->value);
-      $json = json_decode($example->get('Body'), true);
+      $body = $example->get('Response.Body');
+      $this->assertNotNull($body);
+      $json = json_decode($body, true);
       $this->assertArrayHasKey('restfulResources', $json);
       $this->assertEquals('1', $json['restfulResources'][0]['id']);
       $this->assertEquals('rest name', $json['restfulResources'][0]['name']);

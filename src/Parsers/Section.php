@@ -82,7 +82,7 @@ class Section
     return array_get($this->attributes, $key);
   }
 
-  public function set($key, $value)
+  public function setAttribute($key, $value)
   {
     return array_set($this->attributes, $key, $value);
   }

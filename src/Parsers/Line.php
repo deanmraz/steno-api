@@ -116,7 +116,7 @@ class Line
   protected function parseType()
   {
     if($this->parent) $this->type = 'parent';
-    else if($this->original === $this->code_block) $this->type = 'code_block';
+    else if(trim($this->original) === $this->code_block) $this->type = 'code_block';
     else if($this->json) $this->type = 'json';
     else if($this->list_item && $this->key && $this->value) $this->type = 'list_key_value';
     else if($this->list_item && !$this->key && !$this->value) $this->type = 'list_item';
