@@ -64,6 +64,26 @@ class ParserDocumentTest extends \PHPUnit_Framework_TestCase
 
   }
 
+  public function testCodeBlock()
+  {
+    $string = "## Example: All\n".
+              "+ Response: \n".
+              "+ Body:\n".
+              "```\n".
+              "{\n".
+                 "\"json\": true\n".
+              "}\n".
+              "```\n";
+
+    $lines = $this->callMethod('segmentLines', [$string]);
+
+    $sections = $this->callMethod('segmentSections', [$lines]);
+
+    $this->assertEquals('{"json": true}', $sections->get(0)->get('Response.Body'));
+
+  }
+
+
   public function testLines()
   {
     $string = $this->string;

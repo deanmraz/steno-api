@@ -63,10 +63,36 @@ class Document
     $lines = $lineCollection->all();
     $lastSection = null;
     $lastListAttribute = null;
+    $codeBlockStarted = false;
+    $codeBlockText = "";
     foreach($lines as $key => $line)
     {
-      $method = "segment".studly_case($line->type)."Line";
-      $result = $this->$method($line, $lastSection, $lastListAttribute);
+      if($line->type === 'code_block' && !$codeBlockStarted) {
+        $codeBlockStarted = "continue";
+        continue;
+      } else if ($line->type === 'code_block' && $codeBlockStarted) {
+        $codeBlockStarted = "stop";
+        $lastSection->set($lastListAttribute, $codeBlockText);
+
+        if(strpos($lastListAttribute,".")!==false) {
+          $lastAttrs = explode(".",$lastListAttribute);
+          $lastListAttribute = $lastAttrs[0];
+        } else {
+          $lastListAttribute = null;
+        }
+      }
+
+      if(!$codeBlockStarted) {
+        $method = "segment".studly_case($line->type)."Line";
+        $result = $this->$method($line, $lastSection, $lastListAttribute);
+      } else if($codeBlockStarted === 'continue') {
+        $codeBlockText .= $line->original;
+        $result = $lastListAttribute;
+      }else if($codeBlockStarted === 'stop') {
+        $codeBlockText = "";
+        $result = $lastListAttribute;
+      }
+
 
       //set section
       if(is_object($result)) {
@@ -74,7 +100,8 @@ class Document
         $lastSection = $sections->last();
         $lastListAttribute = null;
       // set last list attribute
-      } else if(!empty($result)) {
+      }
+      else if(!empty($result)) {
         $lastListAttribute = $result;
       } else {
         $lastListAttribute = null;
@@ -123,10 +150,10 @@ class Document
    * @param $line
    * @param $section Section
    */
-  protected function segmentListLine($line, $section)
+  protected function segmentListLine($line, $section, $attribute)
   {
-    $section->addAttributeList($line->key);
-    return $line->key;
+    $section->addAttributeList($line->key, $attribute);
+    return $attribute ? "$attribute.{$line->key}" : $line->key;
   }
 
   /**
@@ -156,6 +183,15 @@ class Document
   protected function segmentKeyValueLine($line, $section)
   {
     $section->addAttributeKeyValue($line->key, $line->value);
+  }
+
+  /**
+   * @param $line
+   * @param $section Section
+   */
+  protected function segmentCodeBlockLine($line, $section, $attribute)
+  {
+
   }
 
   /**

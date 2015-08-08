@@ -41,10 +41,14 @@ class Section
     $this->setAttributeType($key, 'key_value');
   }
 
-  public function addAttributeList($key)
+  public function addAttributeList($key, $attribute = null)
   {
-    $this->checkAttributeHasBeenSet($key);
-    $this->attributes[$key] = [];
+    if($attribute) {
+      $this->addAttributeListKeyValue($key, null, $attribute);
+    } else {
+      $this->checkAttributeHasBeenSet($key);
+      $this->attributes[$key] = [];
+    }
   }
 
   public function addAttributeListItem($attribute, $value)
@@ -76,6 +80,11 @@ class Section
   public function get($key)
   {
     return array_get($this->attributes, $key);
+  }
+
+  public function set($key, $value)
+  {
+    return array_set($this->attributes, $key, $value);
   }
 
   public function setDescription($text)
