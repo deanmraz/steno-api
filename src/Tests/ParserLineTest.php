@@ -33,6 +33,13 @@ class ParserLineTest extends \PHPUnit_Framework_TestCase
     $this->assertEquals('list', $line->key);
   }
 
+  public function testListSpace()
+  {
+    $string = "list space:";
+    $line = $this->createLine($string, 'list');
+    $this->assertEquals('list space', $line->key);
+  }
+
   public function testListItem()
   {
     $string = "+ item value";

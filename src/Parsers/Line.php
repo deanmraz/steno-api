@@ -64,13 +64,25 @@ class Line
   protected function parseKey()
   {
     $segment = explode(' ',$this->original);
-    foreach($segment as $item)
+    $lead_text = "";
+    foreach($segment as $key => $item)
     {
       if(substr($item, -1)===':') {
-        $this->key = substr($item, 0, -1);
+        $this->key = $lead_text.substr($item, 0, -1);
         break;
+      } else if(trim($item) !== "" && !$this->containsLeads($item)){
+        $lead_text .= $item." ";
       }
     }
+  }
+
+  protected function containsLeads($string)
+  {
+    $leads = array_merge($this->parent_types,$this->list_item_types);
+    foreach($leads as $lead) {
+      if (stripos($string,$lead) !== false) return true;
+    }
+    return false;
   }
 
   protected function parseValue()
