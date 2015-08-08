@@ -26,4 +26,9 @@ class Resource extends Base
   {
     return $this->getAttribute($key);
   }
+
+  public function getAttributes()
+  {
+    return $this->section->getAttributes();
+  }
 }

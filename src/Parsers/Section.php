@@ -94,4 +94,9 @@ class Section
     else array_unshift($this->children, $child);
   }
 
+  public function getAttributes()
+  {
+    return $this->attributes;
+  }
+
 }
