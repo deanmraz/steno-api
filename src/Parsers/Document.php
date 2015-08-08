@@ -8,8 +8,10 @@ class Document
   protected $lines;
   protected $sections;
   protected $nested;
+  protected $serializerNames;
+  protected $serializers;
 
-  public function parse($document)
+  public function parse($document, $type = null)
   {
     $document = $this->cleanup($document);
 
@@ -22,7 +24,15 @@ class Document
     # nested sections
     $this->nested = $nested = $this->nestSections($sections);
 
-    return $nested;
+    # create document object
+    return $this->createDocument($this->nested, $type);
+  }
+
+  public function createDocument($sections, $type)
+  {
+    $document = new $type;
+    $document->create($sections);
+    return $document;
   }
 
   protected function cleanup($document)
@@ -85,6 +95,12 @@ class Document
     $section->value = $line->value;
     $section->title = $line->text;
     return $section;
+  }
+
+  protected function segmentJsonLine($line, $section, $lastListAttribute)
+  {
+      $section->continueAttributeKeyValueString($lastListAttribute, $line->json);
+      return $lastListAttribute;
   }
 
   /**
