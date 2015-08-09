@@ -27,27 +27,31 @@
 
         @foreach($document->http->gets() as $uri => $get)
         <div class="row">
-            <h2>{{$get->value}}</h2>
+            <h2>{{$get->value}} <small>HTTP</small></h2>
 
             <h3>Examples</h3>
             @foreach($get->children as $example)
-            <h4>{{$example->value}}</h4>
-            <table class="table">
-                @foreach($example->getAttributes() as $attr => $value)
-                <tr>
-                    <td>{{$attr}}</td>
-                    @if($attr != "Body")
-                    <td>{{is_string($value) ? $value : ""}} {{var_dump($value) }}</td>
-                    @else
-                    <td><pre><code><?php
-                        $json = json_decode($value);
-                        echo json_encode($json, JSON_PRETTY_PRINT);
-                    ?></code></pre></td>
-                    @endif
-                </tr>
-
-                @endforeach
-            </table>
+            <div class="panel panel-default">
+                <div class="panel-heading"> <div class="panel-title">{{$example->value}}</div></div>
+                <div class="panel-body">
+                    <h4>Response</h4>
+                    <table class="table">
+                        @foreach($example->get('Response') as $attr => $value)
+                            <tr>
+                                <td>{{$attr}}</td>
+                                @if($attr != "Body")
+                                    <td>{{is_string($value) ? $value : ""}}</td>
+                                @else
+                                    <td><pre><code><?php
+                                        $json = json_decode($value);
+                                        echo json_encode($json, JSON_PRETTY_PRINT);
+                                    ?></code></pre></td>
+                                @endif
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
+            </div>
             @endforeach
         </div>
         @endforeach
